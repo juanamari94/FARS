@@ -1,1 +1,0 @@
-M = csvread("data/fars_test.csv")
