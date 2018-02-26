@@ -41,9 +41,9 @@ def output_results(results):
         os.makedirs(result_dir)
 
     with open(os.path.join(result_dir, "test_set_predictions_output.csv"), "w+") as output:
-        csvwriter = csv.writer(output, delimiter=",")
-        for result in results:
-            csvwriter.writerow([int(result)])
+        output_writer = csv.writer(output, delimiter=",")
+        rounded_results = map(int, results)
+        output_writer.writerow(rounded_results)
 
 
 if __name__ == "__main__":
