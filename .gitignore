@@ -194,5 +194,10 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# Generated files
+/data/parsed_data/fars_test.csv
+/data/parsed_data/fars_train.csv
+/result/test_set_predictions_output.csv
+
 
 # End of https://www.gitignore.io/api/macos,python,pycharm
