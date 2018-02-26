@@ -59,6 +59,10 @@ def parse_dataset(filepath, mappings):
 
 
 def parse_datasets():
+    print("Creating header mappings for dataset parsing...")
+    parsed_data_path = os.path.join(rootdir, "data", "parsed_data")
+    if not os.path.exists(parsed_data_path):
+        os.makedirs(parsed_data_path)
     header_mappings = create_header_mappings()
     print("Parsing training dataset...")
     parse_dataset("{}/data/raw_data/fars_train.csv".format(rootdir), header_mappings)

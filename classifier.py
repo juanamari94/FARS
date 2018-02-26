@@ -19,7 +19,7 @@ def format_training_set(dataset):
 
 def train_model():
     train_features, train_labels = format_training_set(
-        genfromtxt("{}/data/parsed_data/fars_train.csv".format(rootdir), delimiter=","))
+        genfromtxt(os.path.join(rootdir, "data", "parsed_data", "fars_train.csv"), delimiter=","))
     X_train, X_cv, y_train, y_cv = model_selection.train_test_split(train_features, train_labels)
     model = linear_model.LogisticRegression(multi_class="ovr")
     model.fit(X_train, y_train)
@@ -29,14 +29,18 @@ def train_model():
 
 
 def predict_test_set(model):
-    test_features = genfromtxt("{}/data/parsed_data/fars_test.csv".format(rootdir),
+    test_features = genfromtxt(os.path.join(rootdir, "data", "parsed_data", "fars_test.csv"),
                                delimiter=",")  # We don't have labels for this one
     classification_results = model.predict(test_features)
     return classification_results
 
 
 def output_results(results):
-    with open("{}/result/test_set_predictions_output.csv".format(rootdir), "w+") as output:
+    result_dir = os.path.join(rootdir, "result")
+    if not os.path.exists(os.path.join(rootdir, "result")):
+        os.makedirs(result_dir)
+
+    with open(os.path.join(result_dir, "test_set_predictions_output.csv"), "w+") as output:
         csvwriter = csv.writer(output, delimiter=",")
         for result in results:
             csvwriter.writerow([int(result)])
@@ -53,5 +57,4 @@ if __name__ == "__main__":
     print("Done!")
     print("Creating output file...")
     output_results(results)
-    print("Done! Output will be in a csv file called 'test_set_predictions_output' in the\
-'result' folder in the root directory of this project.")
+    print("Done! Output will be in {}".format(os.path.join(rootdir, "result", "test_set_predictions_output.csv")))
