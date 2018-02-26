@@ -14,12 +14,14 @@ INJURY_CLASSES = {'Possible_Injury': 0,
 NUMERIC_CLASSES = ['AGE', 'ALCOHOL_TEST_RESULT', 'DRUG_TEST_RESULTS_(1_of_3)', 'DRUG_TEST_RESULTS_(2_of_3)',
                    'DRUG_TEST_RESULTS_(3_of_3)']
 
+rootdir = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
+
 
 def create_header_mappings():
     """
     We use indices instead of a map because we lack column names on the datasets.
     """
-    file = open("headers.txt", "r")
+    file = open("{}/data/raw_data/headers.txt".format(rootdir), "r")
     dataset_features_and_labels = []
     for line in file:
         header, values = line.split()
@@ -40,12 +42,13 @@ def create_header_mappings():
     return dataset_features_and_labels
 
 
-def parse_dataset(filename, mappings):
-    with open(filename, "r") as train_set:
-        train_set_reader = csv.reader(train_set, delimiter=",")
-        with open("../parsed_data/{}".format(filename), "w+") as parsed_train_set:
-            train_set_writer = csv.writer(parsed_train_set, delimiter=",")
-            for row in train_set_reader:
+def parse_dataset(filepath, mappings):
+    with open(filepath, "r") as train_set:
+        dataset_reader = csv.reader(train_set, delimiter=",")
+        filename = os.path.basename(os.path.normpath(filepath))
+        with open("{}/data/parsed_data/{}".format(rootdir, filename), "w+") as parsed_dataset_writer:
+            train_set_writer = csv.writer(parsed_dataset_writer, delimiter=",")
+            for row in dataset_reader:
                 mapped_row = []
                 for i in range(0, len(row)):
                     if mappings[i] != -1:
@@ -55,8 +58,9 @@ def parse_dataset(filename, mappings):
                 train_set_writer.writerow(mapped_row)
 
 
-if __name__ == "__main__":
-    os.chdir("../data/raw_data/")
+def parse_datasets():
     header_mappings = create_header_mappings()
-    parse_dataset("fars_train.csv", header_mappings)
-    parse_dataset("fars_test.csv", header_mappings)
+    print("Parsing training dataset...")
+    parse_dataset("{}/data/raw_data/fars_train.csv".format(rootdir), header_mappings)
+    print("Parsing test dataset...")
+    parse_dataset("{}/data/raw_data/fars_test.csv".format(rootdir), header_mappings)
